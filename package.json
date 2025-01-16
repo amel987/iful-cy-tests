@@ -1,0 +1,17 @@
+{
+  "name": "schneider_test_task",
+  "description": "Test suite for SE",
+  "scripts": {
+    "start:server": "java -jar /Users/ameljasari/Desktop/schneider_test_task/test-task.war",
+    "cy:open": "start-server-and-test start:server http://localhost:8080 --timeout 120000 npx cypress open",
+    "cy:run": "start-server-and-test start:server http://localhost:8080 --timeout 120000 npx cypress run"
+  },
+  "devDependencies": {
+    "cypress": "^13.17.0",
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "start-server-and-test": "^2.0.10"
+  },
+  "dependencies": {
+    "wait-on": "^8.0.2"
+  }
+}

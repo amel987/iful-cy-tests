@@ -1,0 +1,16 @@
+{
+
+  "user1": {
+    "first_name": "Test",
+    "last_name": "User",
+    "email": "user6@example.com",
+    "mobile": "+38112345678"
+   
+  },
+  "user2": {
+    "first_name": "Test",
+    "last_name": "User",
+    "email": "user7@example.com",
+    "mobile": "+38111987654"
+  }
+}
