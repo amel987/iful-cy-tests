@@ -1,9 +1,9 @@
-/// <reference types="Cypress"/>
+/// <reference types="cypress"/>
 
 import pages from "../page_object/basePage";
 
 describe("Sign Up Form Tests with Multiple Users", () => {
-  const email = `cypress+${Date.now()}@ctest.com`;
+  const email = `cypress+${Date.now()}@test.com`;
 
   before(() => {
     cy.log(email);
@@ -20,22 +20,17 @@ describe("Sign Up Form Tests with Multiple Users", () => {
     cy.login(email, Cypress.env("USER_PASSWORD"));
   });
 
-  it("Empty Username and Password", () => {
-    pages.login.getUsernameField().clear();
+  it("Empty Password", () => {
     pages.login.getPasswordField().clear();
-    pages.login.submit();
-    cy.checkValidationMessage(
-      pages.login.getUsernameField,
-      "Please fill out this field."
-    );
-
     pages.login.fillEmail("test");
     pages.login.submit();
     cy.checkValidationMessage(
       pages.login.getPasswordField,
       "Please fill out this field."
     );
+  });
 
+  it("Empty Username", () => {
     pages.login.getUsernameField().clear();
     pages.login.fillPassword("test");
     pages.login.submit();

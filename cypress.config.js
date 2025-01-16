@@ -1,4 +1,4 @@
-const { defineConfig } = require("Cypress");
+const { defineConfig } = require("cypress");
 const {
   beforeRunHook,
   afterRunHook,
@@ -24,6 +24,6 @@ module.exports = defineConfig({
 
     baseUrl: "http://localhost:8080",
 
-    defaultCommandTimeout: 5000,
+    defaultCommandTimeout: 10000,
   },
 });

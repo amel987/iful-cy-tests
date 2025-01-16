@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-// Importing the pages object
 import pages from "../page_object/basePage";
 
 declare global {
@@ -41,6 +40,4 @@ declare global {
     }
   }
 }
-
-// Export the pages object so it can be referenced elsewhere
 export { };

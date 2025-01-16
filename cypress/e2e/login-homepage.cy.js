@@ -1,9 +1,9 @@
-/// <reference types="Cypress"/>
+/// <reference types="cypress"/>
 
 import pages from "../page_object/basePage";
 
 describe("Sign Up Form Tests with Multiple Users", () => {
-  const email = `cypress+${Date.now()}@ctest.com`;
+  const email = `cypress+${Date.now()}@test.com`;
 
   before(() => {
     cy.log(email);
@@ -26,34 +26,40 @@ describe("Sign Up Form Tests with Multiple Users", () => {
     });
   });
 
-  it("Verify login with empty fields", () => {
-    pages.home.getUsernameField().clear();
+  it("Verify login with empty password", () => {
+    pages.home.fillUsername("test");
     pages.home.getPasswordField().clear();
-    pages.home.loginSubmit();
-    cy.checkValidationMessage(
-      pages.home.getUsernameField,
-      "Please fill out this field."
-    );
-
-    pages.home.fillUsername('test');
     pages.home.loginSubmit();
     cy.checkValidationMessage(
       pages.home.getPasswordField,
       "Please fill out this field."
     );
-    
+  });
+
+  it("Verify login with empty username", () => {
+    pages.home.getUsernameField().clear();
+    pages.home.fillPassword("test");
+    pages.home.loginSubmit();
+    cy.checkValidationMessage(
+      pages.home.getUsernameField,
+      "Please fill out this field."
+    );
   });
 
   it("Verify -Login with Social Media- buttons are functional", () => {
+    pages.home.clickOnFaceBookBtn();
+    cy.log(
+      "we clicked on the facebook link, the integration with facebook opens :)"
+    );
 
-    pages.home.clickOnFaceBookBtn()
-    cy.log('we clicked on the facebook link, the integration with facebook opens :)')
+    pages.home.clickOnTwitterBtn();
+    cy.log(
+      "we clicked on the twitter link, the integration with twitter opens :)"
+    );
 
-    pages.home.clickOnTwitterBtn()
-    cy.log('we clicked on the twitter link, the integration with twitter opens :)')
-
-    pages.home.clickOnGoogleBtn()
-    cy.log('we clicked on the google link, the integration with google opens :)')
-
+    pages.home.clickOnGoogleBtn();
+    cy.log(
+      "we clicked on the google link, the integration with google opens :)"
+    );
   });
 });

@@ -1,37 +1,37 @@
+/// <reference types="cypress"/>
+
 class SignUpPage {
   // Locators
   getFirstNameField() {
-    return cy.contains("First Name").eq(0).next();
+    return cy.contains("First Name").eq(0).next().should("be.visible");
   }
 
   getFirstNameFieldDuplicate() {
-    return cy.get(':nth-child(7)');
-
+    return cy.get(":nth-child(7)").should("be.visible");
   }
 
   getLastNameField() {
-    return cy.contains("Last Name").next();
+    return cy.contains("Last Name").next().should("be.visible");
   }
 
   getEmailField() {
-    return cy.get('[name="user_email"]');
+    return cy.get('[name="user_email"]').should("be.visible");
   }
 
   getPasswordField() {
-    return cy.get('[name="user_pass"]');
+    return cy.get('[name="user_pass"]').should("be.visible");
   }
 
   getMobileField() {
-    return cy.get('[name="user_mobile"]');
-    
+    return cy.get('[name="user_mobile"]').should("be.visible");
   }
 
   getSignUpButton() {
-    return cy.get('.signupbtn')
+    return cy.get(".signupbtn").should("be.visible");
   }
 
   getCancelButton() {
-    return cy.get('.cancelbtn')
+    return cy.get(".cancelbtn").should("be.visible");
   }
 
   // Methods

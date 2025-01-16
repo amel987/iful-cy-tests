@@ -1,32 +1,32 @@
-/// <reference types="Cypress"/>
+/// <reference types="cypress"/>
 
 class loginPage {
   // Locators
   getUsernameField() {
-    return cy.get('[type="text"]');  // Correctly returning the element
+    return cy.get('[type="text"]').should('be.visible');
   }
 
   getPasswordField() {
-    return cy.get('[type="password"]');  // Correctly returning the element
+    return cy.get('[type="password"]').should('be.visible'); 
   }
 
   getSubmitBtn() {
-    return cy.get('button');  // Correctly returning the element
+    return cy.get('button').should('be.visible');
   }
 
   // Methods
 
   fillEmail(email) {
-    this.getUsernameField().type(email);  // Fixed by adding () to getUsernameField()
+    this.getUsernameField().type(email);
   }
 
   fillPassword(password) {
-    this.getPasswordField().type(password);  // Fixed by adding () to getPasswordField()
+    this.getPasswordField().type(password);
   }
 
   submit() {
-    this.getSubmitBtn().click();  // Fixed by adding () to getSubmitBtn()
+    this.getSubmitBtn().click();
   }
 }
 
-export default new loginPage();  // Exporting as a singleton instance
+export default new loginPage();

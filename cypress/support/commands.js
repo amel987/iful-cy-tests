@@ -1,4 +1,4 @@
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
 import pages from "../page_object/basePage";
 
 Cypress.Commands.add("login", (email, password) => {
@@ -14,7 +14,8 @@ Cypress.Commands.add("login", (email, password) => {
 
 Cypress.Commands.add("signupNewUser",(first_name, duplicate_first_name, last_name, email, mobile) => {
     cy.visit("/signup");
-
+    cy.contains('Please fill in this form to create an account.')
+      .should('be.visible');
     pages.signUp.enterFirstName(first_name);
     pages.signUp.enterFirstNameDuplicate(duplicate_first_name);
     pages.signUp.enterLastName(last_name);
