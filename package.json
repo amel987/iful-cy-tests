@@ -1,16 +1,18 @@
 {
-  "name": "schneider_test_task",
-  "description": "Test suite for SE",
+  "name": "orangehrm-cypress-ts",
+  "description": "Cypress TypeScript E2E test suite for OrangeHRM Demo",
   "scripts": {
-    "start:server": "java -jar ./resources/test-task.war",
     "cy:open": "npx cypress open",
-    "cy:run": "npx cypress run"
+    "cy:run": "npx cypress run",
+    "cy:run:headed": "npx cypress run --headed",
+    "cy:run:report": "npx cypress run && npm run report:open",
+    "report:open": "open $(ls -t cypress/reports/*.html | head -1)",
+    "report:clean": "rm -rf cypress/reports"
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
+    "cypress": "^13.17.0",
     "cypress-mochawesome-reporter": "^3.8.2",
-    "start-server-and-test": "^2.0.10"
-  },
-  "dependencies": {
-    "cypress": "^13.17.0"
+    "typescript": "^5.9.3"
   }
 }

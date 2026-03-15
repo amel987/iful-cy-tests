@@ -1,0 +1,2 @@
+QA test attachment file for OrangeHRM attachment upload tests. 
+QA position - Insightful
