@@ -20,5 +20,14 @@ declare namespace Cypress {
      * is shared with subsequent cy.request() calls.
      */
     apiLogin(): Chainable<void>;
+
+    /** Fetch the first available employee from the PIM API. */
+    getFirstEmployee(): Chainable<{ empNumber: number; firstName: string; lastName: string }>;
+
+    /** Create a user via API using credentials from userData fixture. */
+    createUserViaApi(username: string): Chainable<void>;
+
+    /** Delete a user via API by username (no-op if not found). */
+    deleteUserViaApi(username: string): Chainable<void>;
   }
 }

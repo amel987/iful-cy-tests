@@ -112,10 +112,13 @@ tsconfig.json
 
 **BasePage inheritance** — All page objects extend `BasePage`, which provides `visit()` and `assertToast()` so common actions are not duplicated.
 
-**Custom commands** — Three commands are defined in `commands.ts`:
+**Custom commands** — Six commands are defined in `commands.ts`:
 - `cy.loginAs(username, password)` — navigates to the login page and logs in.
 - `cy.loginAsAdmin()` — wraps `cy.session()` with cross-spec caching and session validation, so authenticated tests reuse a single browser session instead of logging in on every `beforeEach`.
 - `cy.apiLogin()` — direct login for tests that need to reset cookie state.
+- `cy.getFirstEmployee()` — fetches the first available employee from the PIM API; used wherever an employee reference is needed so no `empNumber` is hardcoded in fixtures.
+- `cy.createUserViaApi(username)` — creates a system user via the Admin API, resolving the employee dynamically via `cy.getFirstEmployee()`.
+- `cy.deleteUserViaApi(username)` — looks up a user by username and deletes them via the Admin API; used as teardown in User Management tests.
 
 **Data-driven login tests** — Invalid credential scenarios are stored in `fixtures/credentials.json` and iterated with `forEach`, making it straightforward to add new cases without touching test logic.
 
@@ -130,18 +133,18 @@ tsconfig.json
 ### Assumptions
 
 - The public OrangeHRM demo credentials (`Admin` / `admin123`) are valid for the duration of the test run.
-- Employee **"Amelia Brown"** (`empNumber: 116`) exists in the demo instance. Tests that reference this employee will fail if she has been removed or her ID has changed after a demo reset.
-- `jobTitleId: 28` is specific to this demo instance and may differ after a platform reset.
+- At least one employee exists in the demo instance. `cy.getFirstEmployee()` fetches the first available employee dynamically, so no specific `empNumber` is hardcoded.
+- At least one job title exists in the demo instance. `jobTitleId` and job title name are fetched dynamically in `before()` so no ID is hardcoded in fixtures.
 
 ### Limitations
 
 - **Shared environment** — The demo site is publicly writable. Concurrent users can modify or delete records mid-run, causing intermittent, non-deterministic failures. Running during off-peak hours reduces this risk.
-- **No API setup/teardown** — Test data (users, vacancies) is created and deleted through the UI. An API-based `beforeEach`/`afterEach` setup would be faster and more reliable.
+- **Partial API setup/teardown** — User Management and Vacancies tests use `cy.request()` for setup and teardown, but some other modules still rely on UI flows for data management.
 - **No parallelisation config** — Tests run sequentially. Cypress Cloud or a CI matrix could distribute specs across machines and cut total run time significantly.
 
 ### Suggestions for Improvement
 
-1. **API-layer setup** — Use `cy.request()` to create and clean up test data before/after each spec. This eliminates UI noise and makes tests faster and independent of each other.
+1. **API-layer setup** — Extend `cy.request()`-based setup and teardown to remaining modules (e.g. Attachments). This eliminates UI noise and makes tests faster and independent of each other.
 2. **Environment-based configuration** — Introduce multiple `cypress.env.*.json` files (e.g. `staging`, `prod`) and select them via `--env configFile=staging` to support running the suite against different environments.
 3. **CI/CD integration** — Add a GitHub Actions (or similar) workflow that installs dependencies, runs `cy:run`, and uploads the Mochawesome HTML report as an artifact on every pull request.
 4. **Visual regression** — Integrate `cypress-image-snapshot` or Percy to catch unintended UI changes on the Dashboard and other visual-heavy pages.

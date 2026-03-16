@@ -1,8 +1,6 @@
 {
   "vacancy": {
     "name": "CypressTest",
-    "jobTitleId": 28,
-    "employeeId": 116,
     "numOfPositions": 1,
     "description": "Cypress desc",
     "status": true,
@@ -10,8 +8,6 @@
   },
   "search": {
     "activeStatus": "Active",
-    "inactiveStatus": "Closed",
-    "hiringManager": "Amelia Brown",
-    "jobTitle": "Automaton Tester"
+    "inactiveStatus": "Closed"
   }
 }

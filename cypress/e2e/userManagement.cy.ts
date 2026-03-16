@@ -4,41 +4,6 @@ import userData from "../fixtures/userData.json";
 
 const userPage = new UserManagementPage();
 
-const createUserViaApi = (username: string): void => {
-  cy.apiLogin();
-  cy.request({
-    method: "POST",
-    url: "/web/index.php/api/v2/admin/users",
-    headers: { "Content-Type": "application/json" },
-    body: {
-      username,
-      password: userData.newUser.password,
-      userRoleId: userData.newUser.userRoleId,
-      empNumber: userData.newUser.empNumber,
-      status: userData.newUser.status === "Enabled",
-    },
-  });
-};
-
-const deleteUserViaApi = (username: string): void => {
-  cy.apiLogin();
-  cy.request({
-    method: "GET",
-    url: `/web/index.php/api/v2/admin/users?userName=${username}`,
-    failOnStatusCode: false,
-  }).then((response) => {
-    if (response.body.data?.length > 0) {
-      const id = response.body.data[0].id as number;
-      cy.request({
-        method: "DELETE",
-        url: "/web/index.php/api/v2/admin/users",
-        headers: { "Content-Type": "application/json" },
-        body: { ids: [id] },
-      });
-    }
-  });
-};
-
 describe("User Management", () => {
   beforeEach(() => {
     cy.loginAsAdmin();
@@ -48,12 +13,13 @@ describe("User Management", () => {
   describe("Create", () => {
     const username = generateUnique("qa_user_create");
 
-    after(() => deleteUserViaApi(username));
+    after(() => cy.deleteUserViaApi(username));
 
     it("creates a new user via UI and verifies it appears in the list", () => {
+      cy.getFirstEmployee().then((employee) => {
       userPage.clickAdd();
       userPage.selectUserRole(userData.newUser.role);
-      userPage.typeEmployeeName(userData.newUser.employeeNameSearch);
+      userPage.typeEmployeeName(employee.firstName);
       userPage.selectStatus(userData.newUser.status);
       userPage.typeUsername(username);
       userPage.typePassword(userData.newUser.password);
@@ -70,14 +36,15 @@ describe("User Management", () => {
         cy.contains(userData.newUser.role).should("be.visible");
         cy.contains(userData.newUser.status).should("be.visible");
       });
+      });
     });
   });
 
   describe("Edit", () => {
     const username = generateUnique("qa_user_edit");
 
-    before(() => createUserViaApi(username));
-    after(() => deleteUserViaApi(username));
+    before(() => cy.createUserViaApi(username));
+    after(() => cy.deleteUserViaApi(username));
 
     it("edits the user status and verifies the update in the list", () => {
       userPage.searchByUsername(username);
@@ -101,8 +68,8 @@ describe("User Management", () => {
   describe("Delete", () => {
     const username = generateUnique("qa_user_delete");
 
-    before(() => createUserViaApi(username));
-    after(() => deleteUserViaApi(username));
+    before(() => cy.createUserViaApi(username));
+    after(() => cy.deleteUserViaApi(username));
 
     it("deletes the user and confirms it no longer appears in the list", () => {
       userPage.searchByUsername(username);

@@ -5,23 +5,39 @@ import vacancyData from "../fixtures/vacancyData.json";
 const vacanciesPage = new VacanciesPage();
 const vacancyName = generateUnique("vacancy");
 let vacancyId: number;
+let hiringManagerName: string;
+let jobTitleName: string;
 
 describe("Recruitment - Vacancies Search", () => {
   before(() => {
     cy.apiLogin();
-    cy.request({
-      method: "POST",
-      url: "/web/index.php/api/v2/recruitment/vacancies",
-      headers: { "Content-Type": "application/json" },
-      body: { ...vacancyData.vacancy, name: vacancyName },
-    }).then(() => {
-      cy.request({
-        method: "GET",
-        url: `/web/index.php/api/v2/recruitment/vacancies?name=${vacancyName}`,
-      }).then((response) => {
-        vacancyId = response.body.data[0].id;
-      });
-    });
+    cy.request({ method: "GET", url: "/web/index.php/api/v2/admin/job-titles?limit=1" }).then(
+      (jobRes) => {
+        const jobTitleId = jobRes.body.data[0].id as number;
+        jobTitleName = jobRes.body.data[0].title as string;
+        cy.getFirstEmployee().then((employee) => {
+          hiringManagerName = `${employee.firstName} ${employee.lastName}`;
+          cy.request({
+            method: "POST",
+            url: "/web/index.php/api/v2/recruitment/vacancies",
+            headers: { "Content-Type": "application/json" },
+            body: {
+              ...vacancyData.vacancy,
+              name: vacancyName,
+              jobTitleId,
+              employeeId: employee.empNumber,
+            },
+          }).then(() => {
+            cy.request({
+              method: "GET",
+              url: `/web/index.php/api/v2/recruitment/vacancies?name=${vacancyName}`,
+            }).then((response) => {
+              vacancyId = response.body.data[0].id;
+            });
+          });
+        });
+      }
+    );
   });
 
   after(() => {
@@ -66,19 +82,19 @@ describe("Recruitment - Vacancies Search", () => {
 
   context("Search by Hiring Manager", () => {
     it("returns results for a valid hiring manager name", () => {
-      vacanciesPage.typeHiringManager(vacancyData.search.hiringManager);
+      vacanciesPage.typeHiringManager(hiringManagerName);
       vacanciesPage.clickSearch();
 
-      vacanciesPage.assertResultsFound(vacancyData.search.hiringManager);
+      vacanciesPage.assertResultsFound(hiringManagerName);
     });
   });
 
   context("Search by Job Title", () => {
     it("returns results for a valid job title name", () => {
-      vacanciesPage.selectJobTitle(vacancyData.search.jobTitle);
+      vacanciesPage.selectJobTitle(jobTitleName);
       vacanciesPage.clickSearch();
 
-      vacanciesPage.assertResultsFound(vacancyData.search.jobTitle);
+      vacanciesPage.assertResultsFound(jobTitleName);
     });
   });
 
