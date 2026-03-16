@@ -29,5 +29,11 @@ declare namespace Cypress {
 
     /** Delete a user via API by username (no-op if not found). */
     deleteUserViaApi(username: string): Chainable<void>;
+
+    /** Create a vacancy via API. */
+    createVacancyViaApi(name: string, jobTitleId: number, employeeId: number): Chainable<void>;
+
+    /** Delete a vacancy via API by ID. */
+    deleteVacancyViaApi(vacancyId: number): Chainable<void>;
   }
 }

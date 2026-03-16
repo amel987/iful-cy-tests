@@ -112,13 +112,15 @@ tsconfig.json
 
 **BasePage inheritance** — All page objects extend `BasePage`, which provides `visit()` and `assertToast()` so common actions are not duplicated.
 
-**Custom commands** — Six commands are defined in `commands.ts`:
+**Custom commands** — Eight commands are defined in `commands.ts`:
 - `cy.loginAs(username, password)` — navigates to the login page and logs in.
 - `cy.loginAsAdmin()` — wraps `cy.session()` with cross-spec caching and session validation, so authenticated tests reuse a single browser session instead of logging in on every `beforeEach`.
 - `cy.apiLogin()` — direct login for tests that need to reset cookie state.
 - `cy.getFirstEmployee()` — fetches the first available employee from the PIM API; used wherever an employee reference is needed so no `empNumber` is hardcoded in fixtures.
 - `cy.createUserViaApi(username)` — creates a system user via the Admin API, resolving the employee dynamically via `cy.getFirstEmployee()`.
 - `cy.deleteUserViaApi(username)` — looks up a user by username and deletes them via the Admin API; used as teardown in User Management tests.
+- `cy.createVacancyViaApi(name, jobTitleId, employeeId)` — creates a vacancy via the Recruitment API using default fields from `vacancyData` fixture; used as setup in Vacancies tests.
+- `cy.deleteVacancyViaApi(vacancyId)` — deletes a vacancy by ID via the Recruitment API; used as teardown in Vacancies tests.
 
 **Data-driven login tests** — Invalid credential scenarios are stored in `fixtures/credentials.json` and iterated with `forEach`, making it straightforward to add new cases without touching test logic.
 

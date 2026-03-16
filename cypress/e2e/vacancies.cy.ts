@@ -17,17 +17,7 @@ describe("Recruitment - Vacancies Search", () => {
         jobTitleName = jobRes.body.data[0].title as string;
         cy.getFirstEmployee().then((employee) => {
           hiringManagerName = `${employee.firstName} ${employee.lastName}`;
-          cy.request({
-            method: "POST",
-            url: "/web/index.php/api/v2/recruitment/vacancies",
-            headers: { "Content-Type": "application/json" },
-            body: {
-              ...vacancyData.vacancy,
-              name: vacancyName,
-              jobTitleId,
-              employeeId: employee.empNumber,
-            },
-          }).then(() => {
+          cy.createVacancyViaApi(vacancyName, jobTitleId, employee.empNumber).then(() => {
             cy.request({
               method: "GET",
               url: `/web/index.php/api/v2/recruitment/vacancies?name=${vacancyName}`,
@@ -42,12 +32,7 @@ describe("Recruitment - Vacancies Search", () => {
 
   after(() => {
     cy.apiLogin();
-    cy.request({
-      method: "DELETE",
-      url: "/web/index.php/api/v2/recruitment/vacancies",
-      headers: { "Content-Type": "application/json" },
-      body: { ids: [vacancyId] },
-    });
+    cy.deleteVacancyViaApi(vacancyId);
   });
 
   beforeEach(() => {

@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 import { LoginPage } from "../page_objects/LoginPage";
 import userData from "../fixtures/userData.json";
+import vacancyData from "../fixtures/vacancyData.json";
 
 const loginPage = new LoginPage();
 
@@ -85,5 +86,23 @@ Cypress.Commands.add("deleteUserViaApi", (username: string) => {
         body: { ids: [id] },
       });
     }
+  });
+});
+
+Cypress.Commands.add("createVacancyViaApi", (name: string, jobTitleId: number, employeeId: number) => {
+  cy.request({
+    method: "POST",
+    url: "/web/index.php/api/v2/recruitment/vacancies",
+    headers: { "Content-Type": "application/json" },
+    body: { ...vacancyData.vacancy, name, jobTitleId, employeeId },
+  });
+});
+
+Cypress.Commands.add("deleteVacancyViaApi", (vacancyId: number) => {
+  cy.request({
+    method: "DELETE",
+    url: "/web/index.php/api/v2/recruitment/vacancies",
+    headers: { "Content-Type": "application/json" },
+    body: { ids: [vacancyId] },
   });
 });
